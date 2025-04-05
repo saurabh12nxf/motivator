@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Daily Motivation Generator</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <div class="container">
+    <h1>🌞 Daily Motivation</h1>
+    
+    <div class="quote-box">
+      <p id="quote">Loading quote...</p>
+      <p id="author">—</p>
+    </div>
+
+    <div class="buttons">
+      <button id="new-quote">🔁 New Quote</button>     
+      
+      <button id="share">
+        <img src="icons/share.svg" alt="Share" width="20" />
+        Share
+      </button>
+      <button id="toggle-music">
+        <img src="icons/heart.svg" alt="Music" width="20" />
+        Music
+      </button>
+    </div>
+
+    <audio id="bg-music" loop>
+      <source src="assets/lofi.mp3" type="audio/mp3" />
+    </audio>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
