@@ -5,15 +5,26 @@ const shareBtn = document.getElementById('share');
 const musicBtn = document.getElementById('toggle-music');
 const bgMusic = document.getElementById('bg-music');
 
-let quotes = [];
+// Fetch a single quote using ZenQuotes + CORS proxy
+async function fetchQuote() {
+  try {
+    const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://zenquotes.io/api/random')}?t=${Date.now()}`);
 
+    const rawData = await res.json();
+    const data = JSON.parse(rawData.contents);
+    const quote = data[0];
 
-async function fetchQuotes() {
-  const res = await fetch('https://type.fit/api/quotes');
-  quotes = await res.json();
-  showRandomQuote();
+    quoteEl.textContent = `"${quote.q}"`;
+    authorEl.textContent = `— ${quote.a}`;
+    setBackgroundImage();
+  } catch (error) {
+    quoteEl.textContent = "⚠️ Could not load quote.";
+    authorEl.textContent = "Please try again later.";
+    console.error('Error fetching quote:', error);
+  }
 }
 
+// Change background image using Unsplash
 function setBackgroundImage() {
   const keywords = ['nature', 'sunrise', 'sky', 'inspiration'];
   const random = keywords[Math.floor(Math.random() * keywords.length)];
@@ -21,21 +32,14 @@ function setBackgroundImage() {
   document.body.style.backgroundImage = `url(${url})`;
 }
 
-
-function showRandomQuote() {
-  const quote = quotes[Math.floor(Math.random() * quotes.length)];
-  quoteEl.textContent = `"${quote.text}"`;
-  authorEl.textContent = quote.author ? `— ${quote.author}` : "— Unknown";
-  setBackgroundImage();
-}
-
-
+// Copy quote to clipboard
 function shareQuote() {
-  const text = `${quoteEl.textContent} ${authorEl.textContent}`;
-  navigator.clipboard.writeText(text);
-  alert('Quote copied to clipboard! You can paste it anywhere.');
-}
-
+    const text = `${quoteEl.textContent} ${authorEl.textContent}`;
+    const whatsappURL = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+    window.open(whatsappURL, '_blank');
+  }
+  
+// Toggle music
 musicBtn.addEventListener('click', () => {
   if (bgMusic.paused) {
     bgMusic.play();
@@ -46,8 +50,8 @@ musicBtn.addEventListener('click', () => {
   }
 });
 
-
-newQuoteBtn.addEventListener('click', showRandomQuote);
+newQuoteBtn.addEventListener('click', fetchQuote);
 shareBtn.addEventListener('click', shareQuote);
 
-fetchQuotes();
+// Load first quote on page load
+fetchQuote();
